@@ -1,6 +1,5 @@
 package controls;
 
-import java.util.ArrayList;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -15,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import dto.Build;
+import dto.BuildByParam;
 import dto.Job;
 import models.BuildsModel;
 import models.JobsModel;
@@ -71,6 +71,35 @@ public class Jobs{
 		JobsModel jobManager= new JobsModel();
 		Job jobData = null;
 		jobData = jobManager.getJob(job_name);
+		Gson gson = new Gson();
+		String messages = gson.toJson(jobData);
+		
+		
+		return Response.status(200).entity(messages).header("Access-Control-Allow-Origin", "*").build() ;		
+	}
+	
+
+	@GET
+	@Path("/betaJobs")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBetaJobs() throws Exception {
+		JobsModel jobManager= new JobsModel();
+		Job jobData = null;
+		jobData = jobManager.getJobs("https://jenkins.orasi.com/api/json");
+		Gson gson = new Gson();
+		String messages = gson.toJson(jobData);
+		
+		
+		return Response.status(200).entity(messages).header("Access-Control-Allow-Origin", "*").build() ;		
+	}
+
+	@GET
+	@Path("/betaJobs/{job_name}/{param}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBetaJobByParam(@PathParam("job_name") String job_name, @PathParam("param") String param) throws Exception {
+		JobsModel jobManager= new JobsModel();
+		BuildByParam jobData = null;
+		jobData = jobManager.getJobByParam(job_name, param);
 		Gson gson = new Gson();
 		String messages = gson.toJson(jobData);
 		
